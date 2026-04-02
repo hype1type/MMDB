@@ -388,4 +388,4 @@ function UpdateSeriesDatabase() {
   //message(summary);
 }
 
-//UpdateSeriesDatabase()
+UpdateSeriesDatabase()

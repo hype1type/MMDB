@@ -388,4 +388,4 @@ function UpdateActorDatabase() {
   //message(summary);
 }
 
-//UpdateActorDatabase()
+UpdateActorDatabase()

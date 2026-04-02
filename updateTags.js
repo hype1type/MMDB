@@ -388,4 +388,4 @@ function UpdateTagDatabase() {
  // message(summary);
 }
 
-// UpdateTagDatabase()
+UpdateTagDatabase()
