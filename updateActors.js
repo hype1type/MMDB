@@ -166,20 +166,21 @@ function createNewEntry(targetLib, identifier) {
   
   // 设置匹配字段的值
   newEntryData[config.targetMatchField] = identifier;
+  newEntryData["照片"] = "http://192.168.31.125:5000/get_smb_image/profile/" + identifier + ".jpg";
   
   // 添加默认字段值
-  if (config.defaultFields) {
-    for (var fieldName in config.defaultFields) {
-      if (config.defaultFields.hasOwnProperty(fieldName)) {
-        var fieldValue = config.defaultFields[fieldName];
-        // 处理特殊值 {{now}} 表示当前时间
-        if (fieldValue === "{{now}}") {
-          fieldValue = new Date().toISOString().split('T')[0];
-        }
-        newEntryData[fieldName] = fieldValue;
-      }
-    }
-  }
+  // if (config.defaultFields) {
+  //   for (var fieldName in config.defaultFields) {
+  //     if (config.defaultFields.hasOwnProperty(fieldName)) {
+  //       var fieldValue = config.defaultFields[fieldName];
+  //       // 处理特殊值 {{now}} 表示当前时间
+  //       if (fieldValue === "{{now}}") {
+  //         fieldValue = new Date().toISOString().split('T')[0];
+  //       }
+  //       newEntryData[fieldName] = fieldValue;
+  //     }
+  //   }
+  // }
   
   return targetLib.create(newEntryData);
 }
@@ -204,13 +205,19 @@ function processEntry(entry) {
   try {
     // 1. 验证条目
     if (!entry) {
-      throw new Error("条目对象为空");
+      log("❌ 条目对象为空");
+      result.success = false;
+      result.message = "条目对象为空";
+      return result;
     }
     
     // 2. 获取目标库
     var targetLib = libByName(config.targetLibName);
     if (!targetLib) {
-      throw new Error("找不到目标库: " + config.targetLibName);
+      log("❌ 错误：找不到目标库 '" + config.targetLibName + "'。请检查库名和脚本权限。");
+      result.success = false;
+      result.message = "找不到目标库";
+      return result;
     }
     
     // 3. 读取源字段的值
@@ -223,9 +230,14 @@ function processEntry(entry) {
       return result;
     }
     
-    // 4. 检查是否已经关联
+
+    
+    // 5. 解析标识符
+    result.identifiers = parseIdentifiers(result.sourceValue);
+    log("🔍 解析到 " + result.identifiers.length + " 个标识符: " + result.identifiers.join(", "));
+        // 4. 检查是否已经关联
     var existingLinks = entry.field(config.linkFieldName);
-    if (existingLinks && existingLinks.length > 0) {
+    if (existingLinks && existingLinks.length >= result.identifiers.length) {
       // 获取已关联条目的名称，用于日志
       var linkedNames = [];
       for (var l = 0; l < existingLinks.length; l++) {
@@ -239,11 +251,6 @@ function processEntry(entry) {
       result.skipped = linkedNames;
       return result;
     }
-    
-    // 5. 解析标识符
-    result.identifiers = parseIdentifiers(result.sourceValue);
-    log("🔍 解析到 " + result.identifiers.length + " 个标识符: " + result.identifiers.join(", "));
-    
     // 6. 为每个标识符查找或创建关联条目
     var linkedEntries = [];
     
@@ -269,7 +276,7 @@ function processEntry(entry) {
             result.linked.push(identifier);
             log("  ✓ 创建成功: " + identifier);
           } else {
-            throw new Error("创建条目失败: " + identifier);
+            log("创建条目失败: " + identifier);
           }
         }
         
@@ -305,8 +312,6 @@ function processEntry(entry) {
       log("🧹 已清空源字段");
     }
     
-    // 9. 保存条目
-    entry.save();
     
     // 10. 设置结果消息
     result.message = generateResultMessage(result);
@@ -354,10 +359,10 @@ function generateResultMessage(result) {
 /**
  * 方式1：处理当前选中的条目（在界面脚本中使用）
  */
-function processCurrentEntry() {
+function UpdateActorDatabase() {
   var currentEntry = entry();
   if (!currentEntry) {
-    message("❌ 请先选中一个条目");
+    log("❌ 请先选中一个条目");
     return;
   }
   
@@ -365,8 +370,7 @@ function processCurrentEntry() {
   var result = processEntry(currentEntry);
   
   // 显示结果
-  var summary = "=== 处理结果 ===\n" +
-    "源字段值: " + (result.sourceValue || "(空)") + "\n" +
+  var summary = "源字段值: " + (result.sourceValue || "(空)") + "\n" +
     "处理状态: " + (result.success ? "✅ 成功" : "❌ 失败") + "\n" +
     "处理结果: " + result.message + "\n";
   
@@ -380,7 +384,8 @@ function processCurrentEntry() {
     summary += "错误信息:\n  - " + result.errors.join("\n  - ");
   }
   
-  message(summary);
+  //log(summary);
+  //message(summary);
 }
 
-processCurrentEntry()
+//UpdateActorDatabase()
