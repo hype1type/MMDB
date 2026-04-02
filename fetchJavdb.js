@@ -33,7 +33,8 @@ function fetchJavDb() {
         // 提取发行日期（meta类）
         var dateMatch = itemHtml.match(/<div class="meta">\s*([\d\-]+)\s*<\/div>/);
         var releaseDate = dateMatch ? dateMatch[1] : '';
-        
+        releaseDate = releaseDate.replaceAll('-', '/')
+
         // 提取详情页链接
         var linkMatch = itemHtml.match(/<a href="([^"]+)"/);
         var detailUrl = linkMatch ? "https://javdb.com" + linkMatch[1] : '';

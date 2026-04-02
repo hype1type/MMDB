@@ -80,7 +80,8 @@ for (var i = 0; i < movies.length; i++) {
         "封面": movies[i].imgUrl,
         "卡片": movies[i].imgUrl,
         "演员": movies[i].actor,
-        "片名": movies[i].title
+        "片名": movies[i].title,
+        "发布时间": movies[i].releaseDate,
     });
     
     log("✓ 创建成功: " + code);
