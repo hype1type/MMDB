@@ -23,6 +23,8 @@ while ((match = moviePattern.exec(htmlString)) !== null) {
     var dateMatch = itemHtml.match(/発売日: <\/span><span>([^<]+)<\/span>/);
 
     var releaseDate = dateMatch ? dateMatch[1] : '';
+    releaseDate = releaseDate.replace('-', '/')
+
     
     // 提取出演者
     var actorMatch = itemHtml.match(/出演者: <\/span><span><a[^>]*>([^<]+)<\/a>/);
