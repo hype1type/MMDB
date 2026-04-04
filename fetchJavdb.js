@@ -45,7 +45,7 @@ function fetchJavDb() {
         
         // 提取演员信息（如果存在，可能需要从详情页获取）
         // 注意：当前页面可能不直接显示演员，需要进入详情页
-        
+
         movies.push({
             code: code,
             title: title,
@@ -87,7 +87,7 @@ function fetchJavDb() {
             "卡片": movie.imgUrl,
             "演员": movie.actor || "",
             "片名": movie.title || "",
-            "发行日期": movie.releaseDate,
+            "发布时间": movie.releaseDate,
         });
         
         // log("✓ 创建成功: " + movie.code + " - " + movie.title);
