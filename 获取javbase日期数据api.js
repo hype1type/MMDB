@@ -9,24 +9,28 @@ function toYMD(dateInput) {
     return `${year}-${month}-${day}`;
 }
 
-let dateValue = arg("日期");
-if (!dateValue) {
-    let now = new Date().getTime();
-    let formatted = toYMD(now);
-    message(formatted);  // 输出: 2026-04-05
+function getFormattedDate(dateInput) {
+    let formatted = dateValue.toISOString().split('T')[0];
+    if (formatted) {
+        return formatted;
+    }
+    else {
+        let now = new Date().getTime();
+        return toYMD(now);
+    }
 }
-else{
-let formatted = dateValue.toISOString().split('T')[0];
-message(formatted);  // 输出: 2026-04-05
-}
+
 
 
 
 let userInput = arg("页数");
 if (!userInput) {
-    message("请提供页数参数");
-    throw new Error("缺少页数参数");
+    userInput = 1;
 }
+
+let dateValue = arg("日期");
+let formatted = getFormattedDate(dateValue);
+
 
 var targetlib = lib();
 
