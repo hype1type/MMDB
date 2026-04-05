@@ -41,7 +41,7 @@ function isCodeExists(code) {
 }
 
 // 构建请求URL
-var apiUrl = "https://www.avbase.net/_next/data/XY9j5wv3QmWOM01AJRDRG/works/date" + formatted +".json?q=&page=" + userInput;
+var apiUrl = "https://www.avbase.net/_next/data/XY9j5wv3QmWOM01AJRDRG/works/date/" + formatted +".json?q=&page=" + userInput;
 log("请求URL: " + apiUrl);
 
 var result = http().get(apiUrl);
